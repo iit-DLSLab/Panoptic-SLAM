@@ -1,0 +1,27 @@
+version: "3"
+services:
+  panoptic_slam:
+    image: "panoptic_slam:latest"
+    container_name: panoptic_slam_sys
+    environment:
+      DISPLAY: $DISPLAY
+      PATH: $PATH
+      NVIDIA_DRIVER_CAPABILITIES: all
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ~/.Xauthority:/root/.Xauthority
+      - /dev/bus/usb:/dev/bus/usb
+      - ../Dataset:/home/panoptic_slam/Dataset
+      - ../Output:/home/panoptic_slam/Output
+    device_cgroup_rules:
+      - 'c 189:* rmw'
+    network_mode: "host"
+    privileged: true
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

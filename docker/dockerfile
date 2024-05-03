@@ -1,0 +1,155 @@
+FROM nvidia/cuda:11.6.1-cudnn8-devel-ubuntu20.04
+
+ENV DEBIAN_FRONTEND noninteractive
+
+#Update nvidia keys manually
+WORKDIR /home
+RUN rm /etc/apt/sources.list.d/cuda.list
+RUN apt-key del 7fa2af80
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64/7fa2af80.pub
+
+RUN apt-get update && apt-get install -y git wget nano sudo vim iputils-ping ssh software-properties-common curl micro apt-transport-https
+
+#Dependecies
+RUN apt update && apt-get install -y python3-opencv ca-certificates python3-dev ninja-build \
+    dirmngr gnupg2 build-essential libssl-dev python3-pip python3-yaml python3-tk python3-venv gnupg libboost-all-dev
+RUN mkdir /home/panoptic_slam
+
+# install cmake
+WORKDIR /root
+RUN mkdir temp
+WORKDIR /root/temp
+RUN curl -OL https://github.com/Kitware/CMake/releases/download/v3.27.4/cmake-3.27.4.tar.gz
+RUN tar -xzvf cmake-3.27.4.tar.gz
+
+WORKDIR /root/temp/cmake-3.27.4
+RUN ./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release
+RUN make -j4
+RUN make install
+
+WORKDIR /root
+RUN rm -rf temp
+# end cmake installation
+
+# OpenCV 
+WORKDIR /home
+RUN apt -y install libglew-dev libtiff5-dev zlib1g-dev
+RUN apt -y install libjpeg-dev libavcodec-dev libavformat-dev
+RUN apt -y install libavutil-dev libpostproc-dev libswscale-dev
+RUN apt -y install libeigen3-dev libtbb-dev libgtk2.0-dev
+RUN apt -y install cmake pkg-config checkinstall libgstreamer1.0-dev
+RUN apt -y install libgstreamer-plugins-base1.0-dev libgtkglext1
+RUN apt -y install libgtkglext1-dev unzip libpng-dev libtiff-dev
+RUN apt -y install libv4l-dev libxvidcore-dev libx264-dev
+RUN apt -y install libgtk-3-dev libatlas-base-dev gfortran
+RUN apt -y install libprotobuf-dev libgoogle-glog-dev libgflags-dev
+RUN apt -y install libleveldb-dev liblmdb-dev
+RUN apt -y install python3-dev python3-numpy python3-venv
+
+RUN cd ${HOME} && \
+    wget -O opencv.zip https://github.com/opencv/opencv/archive/4.5.1.zip && \
+    wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.5.1.zip && \
+    unzip opencv.zip && \
+    unzip opencv_contrib.zip && \
+    mv opencv-4.5.1 opencv && \
+    mv opencv_contrib-4.5.1 opencv_contrib && \
+    cd ~/opencv && \
+    mkdir build && \
+    cd build && \
+    cmake -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr/local \
+    -D INSTALL_PYTHON_EXAMPLES=ON \
+    -D INSTALL_C_EXAMPLES=ON \
+    -D OPENCV_ENABLE_NONFREE=ON \
+    -DWITH_CUDA=ON \
+    -D WITH_CUDNN=ON \
+    -D OPENCV_DNN_CUDA=ON \
+    -DWITH_GSTREAMER=ON \
+    -DWITH_GSTREAMER_0_10=OFF \
+    -DWITH_OPENGL=ON \
+    -DBUILD_TBB=ON \
+    -D ENABLE_FAST_MATH=1 \
+    -D CUDA_FAST_MATH=1 \
+    -D CUDA_ARCH_BIN="6.1 7.0 7.5 8.6" \
+    -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-11.6 \
+    -DENABLE_PRECOMPILED_HEADERS=OFF \
+    -D WITH_CUBLAS=1 \
+    -DOPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+    -D HAVE_opencv_python3=ON \
+    -DBUILD_EXAMPLES=ON \
+    -DBUILD_opencv_cudacodec=OFF \
+    -D OPENCV_GENERATE_PKGCONFIG=YES \
+    .. && \
+    make -j4  && \
+    make install
+
+#install catch2
+WORKDIR /home
+RUN apt update && \
+    git clone https://github.com/catchorg/Catch2.git && \
+    cd /home/Catch2 && \
+    cmake -Bbuild -H. -DBUILD_TESTING=OFF && \
+    cmake --build build/ --target install 
+
+# Pangolin
+WORKDIR /home/panoptic_slam
+RUN git clone --recursive https://github.com/stevenlovegrove/Pangolin.git
+
+WORKDIR /home/panoptic_slam/Pangolin/build
+RUN apt-get install -y libglew-dev \
+    && cmake .. \
+    && make -j20 \
+    && make install
+
+# Eigen3
+RUN apt install -y libeigen3-dev
+
+# Virtual Environment
+WORKDIR /home/panoptic_slam
+RUN python3 -m venv .venv
+
+# Panoptic-SLAM
+WORKDIR /home/panoptic_slam
+COPY ${PWD}/config /home/panoptic_slam/config
+COPY ${PWD}/Examples /home/panoptic_slam/Examples
+COPY ${PWD}/include /home/panoptic_slam/include
+COPY ${PWD}/src /home/panoptic_slam/src
+COPY ${PWD}/Vocabulary /home/panoptic_slam/Vocabulary
+COPY ${PWD}/build.sh /home/panoptic_slam/build.sh
+COPY ${PWD}/CMakeLists.txt /home/panoptic_slam/CMakeLists.txt
+COPY ${PWD}/requirements.txt /home/panoptic_slam/requirements.txt
+RUN mkdir Output Dataset
+
+
+# Detectron2
+WORKDIR /home/panoptic_slam
+RUN . .venv/bin/activate && \
+    pip3 install torch==1.13.1+cu116 torchvision==0.14.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116 && \
+    pip3 install 'git+https://github.com/facebookresearch/detectron2.git@v0.5' && \
+    pip3 install -r requirements.txt
+
+# install realsense2
+WORKDIR /home
+RUN apt-get update
+RUN  apt-get -y upgrade
+RUN  apt-get dist-upgrade 
+RUN  apt-get install -y libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev libudev-dev libusb-1.0-0-dev at
+RUN  git clone https://github.com/IntelRealSense/librealsense.git
+WORKDIR  /home/librealsense
+RUN  mkdir build && cd build && cmake ../ -DBUILD_EXAMPLES=true && \
+     make -j4 && make install
+
+#Copy Thirdparty without build folder
+COPY ${PWD}/Thirdparty/DBoW2 /home/panoptic_slam/Thirdparty/DBoW2
+COPY ${PWD}/Thirdparty/g2o /home/panoptic_slam/Thirdparty/g2o
+COPY ${PWD}/Thirdparty/Sophus /home/panoptic_slam/Thirdparty/Sophus
+RUN rm -rf /home/panoptic_slam/Thirdparty/DBoW2/build
+RUN rm -rf /home/panoptic_slam/Thirdparty/g2o/build
+RUN rm -rf /home/panoptic_slam/Thirdparty/Sophus/build
+
+# build Panoptic-SLAM
+WORKDIR /home/panoptic_slam
+RUN bash build.sh
+
+
