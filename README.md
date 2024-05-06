@@ -3,6 +3,7 @@
 This work presents Panoptic-SLAM, a visual SLAM system robust to dynamic environments, even in the presence of unknown objects. It uses panoptic segmentation to filter dynamic objects from the scene during the state estimation process. Panoptic-SLAM is based on ORB-SLAM3, a state-of-the-art SLAM system for static environments.
 
 Paper: **[PDF](https://arxiv.org/pdf/2405.02177)**.
+
 Demonstration video:  
 
 ## License
