@@ -4,7 +4,7 @@ This work presents Panoptic-SLAM, a visual SLAM system robust to dynamic environ
 
 Paper: **[PDF](https://arxiv.org/pdf/2405.02177)**.
 
-Demonstration video:  
+Demonstration video: **[Video](https://www.youtube.com/watch?v=BNCKWLrMk8I)**
 
 ## License
 Panoptic-SLAM is released under a GPLv3 License
