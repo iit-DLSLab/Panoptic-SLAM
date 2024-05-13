@@ -24,7 +24,7 @@ if you use Panoptic-SLAM in an academic work, please cite:
 For easy installation of our system, we provide a dockerfile to install all dependencies from Panoptic-SLAM. You can install docker following the instruction from [here](https://docs.docker.com/engine/install/ubuntu/). </br>
 First, clone the repository:
 ```
-git clone URL
+git clone https://github.com/iit-DLSLab/Panoptic-SLAM
 ```
 To build the docker image, run the following command. Note the docker image will create a virtual environment with ubuntu 20.04, CUDA 11.6, cuddn8 and python 3.8. The building process might take some time.
 ```
@@ -70,7 +70,7 @@ we use detectron2 library to perform panoptic-segmentation inference in python a
 ### 2. Building Panoptic-SLAM library and examples
 Clone the repository
 ```
-git clone URL
+git clone https://github.com/iit-DLSLab/Panoptic-SLAM
 ```
 
 We provide a script build.sh to build the Thirdparty libraries and Panoptic-SLAM. The CMakeLists.txt is configured to run with CUDA 11.6 and python3.8
