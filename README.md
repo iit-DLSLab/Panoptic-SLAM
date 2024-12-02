@@ -88,7 +88,7 @@ python associate.py PATH_TO_SEQUENCE/rgb.txt PATH_TO_SEQUENCE/depth.txt > associ
 ```
 - Execute the following command. Change <Path To Settings> to the path for the TUM1.yaml, TUM2.yaml or TUM3.yaml files. Change <Path to Dataset> to the uncompressed sequence folder. Change <Path To Association file> to the path to the corresponding associations file.
 ```
-./rgbd_tum Vocabulary/ORBvoc.txt <Path To Settings> <Path to Dataset> <Path To Association file>
+./panoptic_slam Vocabulary/ORBvoc.txt <Path To Settings> <Path to Dataset> <Path To Association file>
 ```
 
 ## Acknowledgements
