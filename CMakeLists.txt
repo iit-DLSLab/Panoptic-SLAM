@@ -164,9 +164,9 @@ endif()
 # RGB-D examples
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
-add_executable(rgbd_tum
+add_executable(panoptic_slam
         Examples/RGB-D/rgbd_tum.cc)
-target_link_libraries(rgbd_tum ${PROJECT_NAME})
+target_link_libraries(panoptic_slam ${PROJECT_NAME})
 
 if(realsense2_FOUND)
     add_executable(rgbd_realsense_D435i
