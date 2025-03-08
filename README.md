@@ -10,13 +10,13 @@ Demonstration video: **[Video](https://www.youtube.com/watch?v=BNCKWLrMk8I)**
 Panoptic-SLAM is released under a GPLv3 License
 if you use Panoptic-SLAM in an academic work, please cite:
 ```
-@misc{abati2024panopticslam,
-      title={Panoptic-SLAM: Visual SLAM in Dynamic Environments using Panoptic Segmentation}, 
-      author={Gabriel Fischer Abati and João Carlos Virgolino Soares and Vivian Suzano Medeiros and Marco Antonio Meggiolaro and Claudio Semini},
-      year={2024},
-      eprint={2405.02177},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO}
+@INPROCEEDINGS{abati2024panopticslam,
+  author={Abati, Gabriel Fischer and Soares, Joao Carlos Virgolino and Medeiros, Vivian Suzano and Meggiolaro, Marco Antonio and Semini, Claudio},
+  booktitle={2024 21st International Conference on Ubiquitous Robots (UR)}, 
+  title={Panoptic-SLAM: Visual SLAM in Dynamic Environments using Panoptic Segmentation}, 
+  year={2024},
+  pages={01-08},
+  doi={10.1109/UR61395.2024.10597506}
 }
 ```
 
