@@ -91,6 +91,9 @@ python associate.py PATH_TO_SEQUENCE/rgb.txt PATH_TO_SEQUENCE/depth.txt > associ
 ./panoptic_slam Vocabulary/ORBvoc.txt <Path To Settings> <Path to Dataset> <Path To Association file>
 ```
 
+## Download Experiments Data from Paper
+We have uploaded the data used in the paper in our HuggingFace account, you can access it [here](https://huggingface.co/datasets/DLS-IIT/Panoptic-SLAM/tree/main).
+
 ## Acknowledgements
 Our code builds on [ORB-SLAM3](https://github.com/UZ-SLAMLab/ORB_SLAM3).
 
