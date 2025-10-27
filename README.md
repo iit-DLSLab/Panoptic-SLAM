@@ -20,6 +20,11 @@ if you use Panoptic-SLAM in an academic work, please cite:
 }
 ```
 
+## Release News
+- **Oct 27 2025:** Publish Data used in the paper
+  - The Data used for the experiments in the paper can be downloaded [here](https://huggingface.co/datasets/DLS-IIT/Panoptic-SLAM/tree/main).
+
+
 ## Build Panoptic-SLAM on Docker
 For easy installation of our system, we provide a dockerfile to install all dependencies from Panoptic-SLAM. You can install docker following the instruction from [here](https://docs.docker.com/engine/install/ubuntu/). </br>
 First, clone the repository:
@@ -90,9 +95,6 @@ python associate.py PATH_TO_SEQUENCE/rgb.txt PATH_TO_SEQUENCE/depth.txt > associ
 ```
 ./panoptic_slam Vocabulary/ORBvoc.txt <Path To Settings> <Path to Dataset> <Path To Association file>
 ```
-
-## Download Experiments Data from Paper
-We have uploaded the data used in the paper in our HuggingFace account, you can access it [here](https://huggingface.co/datasets/DLS-IIT/Panoptic-SLAM/tree/main).
 
 ## Acknowledgements
 Our code builds on [ORB-SLAM3](https://github.com/UZ-SLAMLab/ORB_SLAM3).
