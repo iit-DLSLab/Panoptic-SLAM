@@ -125,7 +125,6 @@ RUN mkdir Output Dataset
 # Detectron2
 WORKDIR /home/panoptic_slam
 RUN . .venv/bin/activate && \
-    pip install typing-extensions==4.5.0 && \
     pip3 install torch==1.13.1+cu116 torchvision==0.14.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116 && \
     pip3 install 'git+https://github.com/facebookresearch/detectron2.git@v0.5' && \
     pip3 install -r requirements.txt
