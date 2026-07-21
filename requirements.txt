@@ -1,6 +1,6 @@
 easydict
 opencv-python
 #pillow==9.1.0
-pillow==12.2.0
+pillow
 mxnet-mkl==1.6.0 
 numpy==1.23.1
